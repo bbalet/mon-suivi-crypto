@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CryptoController!{% endblock %}
+
+{% block body %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Historique du cours {{ symbol }}-USDT</h1>
+
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+
+<script type ="text/javascript">
+document.addEventListener("DOMContentLoaded", function() {
+    const chartConfig = {
+        type: 'line', // Type de graphique (ligne)
+        data: {
+          labels: [{{ labels }}],
+          datasets: [{
+            label: '{{ symbol }}-USDT',
+            data: [{{ data }}],
+            backgroundColor: 'rgba(0, 123, 255, 0.5)', // Couleur de fond du graphique
+            borderColor: 'rgba(0, 123, 255, 1)', // Couleur de la bordure du graphique
+            borderWidth: 1 // Largeur de la bordure du graphique
+          }]
+        },
+        options: {
+            scales: {
+                x: {
+                    ticks: {
+                        callback: function(val, index) {
+                            const datetick = new Date(this.getLabelForValue(val))
+                            let display = datetick.toLocaleDateString() + ' ' + datetick.toLocaleTimeString()
+                            console.log(val + '=>' +display)
+                            return display
+                        }
+                    }
+                }
+            }
+        }
+      };
+      
+      const chartElement = document.getElementById('myChart');
+      var myChart = new Chart(chartElement, chartConfig);
+});
+</script>
+{% endblock %}
